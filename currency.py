@@ -1,21 +1,22 @@
+
 #import libraries 
 import requests
+import time
+import uagents
+from uagents import Agent , Context
 import tkinter as tk
-
 from tkinter import *
-
-from tkinter import ttk
-
-#from forex_python.converter import CurrencyRates,CurrencyCodes
+from tkinter import ttk,messagebox
+import threading
 
 
 #creating GUI 
 root = tk.Tk()
 root.title('Currency Converter')
-root.geometry('500x650')
-root['bg']='gray81'
+root.geometry('500x450')
+root['bg']='azure2'
 
- 
+
 #creating variable
 variable1 = tk.StringVar(root)
 variable2 = tk.StringVar(root)
@@ -27,65 +28,126 @@ variable2.set("choose currency")
 
 
 #Creating Header 
-lbl_txt = Label(root,text = 'Currency Converter',font=("Time New Roman",'18','bold'),bg='gray81')
-lbl_txt.place(x=135)
+lbl_txt = Label(root,text = 'CURRENCY CONVERTER',font=("Time New Roman",'18','bold'),bg='gray81')
+lbl_txt.place(x=110)
 
+#url of api key 
+url = 'https://api.apilayer.com/exchangerates_data/latest?base=INR&symbols=EUR,INR,ZAR,USD,AED,AFN,ALL,AMD,ANG,AOA,ARS,AUD,AWG,AZN,BAN,BGN,BGD,BDT,BBD,BWP,BND,BOB,BHD,BIF,BSD,BRL,BMD,BTC,BTN,BYN,BYR,BZD,CAD,CDF,CHF,CLF,CLP,CNY,COP,CRC,CUC,CUP,CVE,CZK,DJF,DKK,DOP,DZD,EGP,ERN,ETB,FJD,FKP,GBP,GEL,GGP,GHS,GIP,GMD,GNF,GTQ,GYD,HKD,HNL,HRK,HTG,HUF,IDR,ILS,IMP,IQD,IRR,ISK,JEP,JMD,JOD,JPY,KES,KGS,KHR,KMF,KPW,KRW,KWD,KYD,KZT,LAK,LBP,LKR,LRD,LSL,LTL,LVL,LYD,MAD,MDL,MGA,MKD,MMK,MNT,MOP,MRO,MUR,MVR,MWK,MXN,MYR,MZN,NAD,NGN,NIO,NOK,NPR,NZD,OMR,PAB,PEN,PGK,PHP,PKR,PLN,PYG,QAR,RON,RSD,RUB,RWF,SAR,SBD,SCR,SDG,SEK,SGD,SHP,SLE,SLL,SOS,SRD,SSP,STD,SVC,SYP,SZL,THB,TJS,TMT,TND,TOP,TRY,TTD,TWD,TZS,UAH,UGX,UYU,UZS,VEF,VES,VND,VUV,WST,XAF,XAG,XAU,XCD,XDR,XOF,XPF,YER,ZMK,ZMW,ZWL&amount=5&date=2023-10-01' 
+headers = {
+       "apikey":"s5eYjJ3Abu2kTs5tdEqaWAk7qWbDcM0L"
+    }
+response = requests.get(url,headers=headers)
+
+
+#Creating function for getting exchange rates
+def get_exchange_rates(base_currency,target_currency):
+    base_currency=variable1.get()
+    target_currency=variable2.get()
+    if response.status_code==200:
+        data = response.json()
+        exchange_rates = data["rates"].get(target_currency)
+        return exchange_rates
+    else:
+        print("Failes to fetch exchange rates")
+        return None
+    
 
 #Function for currency conversion
 def currencyconversion():
 
-    from_currency = variable1.get()
-    to_currency = variable2.get()
-    url = 'https://api.apilayer.com/fixer/latest?base=INR&symbols=AED,AFN,ALL,AMD,ANG,AOA,ARS,AUD,AWG,AZN,BAN,BGN,BGD,BDT,BBD,BWP,BND,BOB,BHD,BIF,BSD,BRL,BMD,BTC,BTN,BYN,BYR,BZD,CAD,CDF,CHF,CLF,CLP,CNY,COP,CRC,CUC,CUP,CVE,CZK,DJF,DKK,DOP,DZD,EGP,ERN,ETB,EUR,FJD,FKP,GBP,GEL,GGP,GHS,GIP,GMD,GNF,GTQ,GYD,HKD,HNL,HRK,HTG,HUF,IDR,ILS,IMP,INR,IQD,IRR,ISK,JEP,JMD,JOD,JPY,KES,KGS,KHR,KMF,KPW,KRW,KWD,KYD,KZT,LAK,LBP,LKR,LRD,LSL,LTL,LVL,LYD,MAD,MDL,MGA,MKD,MMK,MNT,MOP,MRO,MUR,MVR,MWK,MXN,MYR,MZN,NAD,NGN,NIO,NOK,NPR,NZD,OMR,PAB,PEN,PGK,PHP,PKR,PLN,PYG,QAR,RON,RSD,RUB,RWF,SAR,SBD,SCR,SDG,SEK,SGD,SHP,SLE,SLL,SOS,SRD,SSP,STD,SVC,SYP,SZL,THB,TJS,TMT,TND,TOP,TRY,TTD,TWD,TZS,UAH,UGX,USD,UYU,UZS,VEF,VES,VND,VUV,WST,XAF,XAG,XAU,XCD,XDR,XOF,XPF,YER,ZAR,ZMK,ZMW,ZWL&amount=5&date=2023-10-01'
+    base_currency = variable1.get()
+    target_currency = variable2.get()
     
-    headers = {
-        "apikey":"LcuMIw3xRrFZixXlcCtLLTONGuJsuEr1"
-    }
-    response = requests.get(url,headers=headers)
-    convert_data = response.json()
-    amount = float(sor_amount.get())
-    result = (convert_data['rates'][to_currency]*amount)/convert_data['rates'][from_currency]
+    if response.status_code==200:
+        convert_data = response.json()
+        amount = 1
+        result = (convert_data['rates'][target_currency]*amount)/convert_data['rates'][base_currency]
+        new_amount = float("{:.4f}".format(result))
+        des_amount.insert(0,f"1 {base_currency} = {new_amount} {target_currency}")
+        return des_amount
+    else:
+        print("Fails to fetch exchange rates")
+        return None
+    
+    
+#function for alert message
 
-    #convert_amount = c.convert(from_currency,to_currency,float(sor_amount.get()))
-    new_amount = float("{:.4f}".format(result))
-    des_amount.insert(0,str(new_amount))
-    return des_amount
+def monitor_exchange_rate():
+    while True:
+        try:
+            base_currency = variable1.get()
+            target_currency = variable2.get()
+            threshold_up = float(thres_up.get())
+            threshold_down = float(thres_down.get())
+           
+            convert_data = response.json()
+            current_rate=(convert_data['rates'][target_currency]*1)/convert_data['rates'][base_currency]
+ 
+            
+            if current_rate is not None:
+                
+                if current_rate > threshold_up:
+                    alert_message = f"Alert: Exchange rate is more than upper limit"
+                    messagebox.showinfo("Exchange Rate Alert", alert_message)
+                elif current_rate < threshold_down:
+                    alert_message1 = f"Alert: Exchange rate is less than lower limit"
+                    messagebox.showinfo("Exchange Rate Alert", alert_message1)
+        except ValueError:
+            pass  # Handle invalid threshold values gracefully
+        time.sleep(300)
 
+
+#combined function for monitor_exchange_rate and currencyconversion
+
+def combined():
+    currency_conversion_thread = threading.Thread(target=currencyconversion)
+    exchange_rate_thread = threading.Thread(target=monitor_exchange_rate)
+    
+    currency_conversion_thread.start()
+    exchange_rate_thread.start()
 
 #Function for clearing all values
 def clear_all():
-    sor_amount.delete(0,tk.END)
     des_amount.delete(0,tk.END)
-
-
-#creating label Amount 
-lbl_txt = Label(root,text="Amount             :",font=("Helvetica",'15','bold'),bg='gray81')
-lbl_txt.place(x=50,y=60)
-
-
-#Taking value from user
-sor_amount = tk.Entry(root,font=('Helvetica','18','bold'),bg='White')
-sor_amount.place(x=220,y=65,height= 25,width = 200) 
-
+    thres_down.delete(0,tk.END)
+    thres_up.delete(0,tk.END)
+    
 
 #list of currencies
-list= ['AED','AFN','ALL','AMD','ANG','AOA','ARS','AUD','AWG','AZN','BAN','BGN','BGD','BDT','BBD','BWP','BND','BOB','BHD','BIF','BSD','BRL','BMD','BTC','BTN','BYN','BYR','BZD','CAD','CDF','CHF','CLF','CLP','CNY','COP','CRC','CUC','CUP','CVE','CZK','DJF','DKK','DOP','DZD','EGP','ERN','ETB','EUR','FJD','FKP','GBP','GEL','GGP','GHS','GIP','GMD','GNF','GTQ','GYD','HKD','HNL','HRK','HTG','HUF','IDR','ILS','IMP','INR','IQD','IRR','ISK','JEP','JMD','JOD','JPY','KES','KGS','KHR','KMF','KPW','KRW','KWD','KYD','KZT','LAK','LBP','LKR','LRD','LSL','LTL','LVL','LYD','MAD','MDL','MGA','MKD','MMK','MNT','MOP','MRO','MUR','MVR','MWK','MXN','MYR','MZN','NAD','NGN','NIO','NOK','NPR','NZD','OMR','PAB','PEN','PGK','PHP','PKR','PLN','PYG','QAR','RON','RSD','RUB','RWF','SAR','SBD','SCR','SDG','SEK','SGD','SHP','SLE','SLL','SOS','SRD','SSP','STD','SVC','SYP','SZL','THB','TJS','TMT','TND','TOP','TRY','TTD','TWD','TZS','UAH','UGX','USD','UYU','UZS','VEF','VES','VND','VUV','WST','XAF','XAG','XAU','XCD','XDR','XOF','XPF','YER','ZAR','ZMK','ZMW','ZWL']
+list= ['EUR','INR','ZAR','USD','AED','AFN','ALL','AMD','ANG','AOA','ARS','AUD','AWG','AZN','BAN','BGN','BGD','BDT','BBD','BWP','BND','BOB','BHD','BIF','BSD','BRL','BMD','BTC','BTN','BYN','BYR','BZD','CAD','CDF','CHF','CLF','CLP','CNY','COP','CRC','CUC','CUP','CVE','CZK','DJF','DKK','DOP','DZD','EGP','ERN','ETB','FJD','FKP','GBP','GEL','GGP','GHS','GIP','GMD','GNF','GTQ','GYD','HKD','HNL','HRK','HTG','HUF','IDR','ILS','IMP','IQD','IRR','ISK','JEP','JMD','JOD','JPY','KES','KGS','KHR','KMF','KPW','KRW','KWD','KYD','KZT','LAK','LBP','LKR','LRD','LSL','LTL','LVL','LYD','MAD','MDL','MGA','MKD','MMK','MNT','MOP','MRO','MUR','MVR','MWK','MXN','MYR','MZN','NAD','NGN','NIO','NOK','NPR','NZD','OMR','PAB','PEN','PGK','PHP','PKR','PLN','PYG','QAR','RON','RSD','RUB','RWF','SAR','SBD','SCR','SDG','SEK','SGD','SHP','SLE','SLL','SOS','SRD','SSP','STD','SVC','SYP','SZL','THB','TJS','TMT','TND','TOP','TRY','TTD','TWD','TZS','UAH','UGX','UYU','UZS','VEF','VES','VND','VUV','WST','XAF','XAG','XAU','XCD','XDR','XOF','XPF','YER','ZMK','ZMW','ZWL']
+
 
 #Creating label from currency 
-lbl_txt = tk.Label(root,text="From Currency :",font=("Helvetica",'15','bold'),bg='gray81')
+lbl_txt = tk.Label(root,text="Base Currency :",font=("Helvetica",'15','bold'),bg='gray81')
 lbl_txt.place(x=50,y=100)
 
 
 #Creating label to currency 
-lbl_txt = tk.Label(root,text="To Currency     :",font=("Helvetica",'15','bold'),bg='gray81')
+lbl_txt = tk.Label(root,text="Target Currency     :",font=("Helvetica",'15','bold'),bg='gray81')
 lbl_txt.place(x=50,y=140)
 
 
+lbl_txt = tk.Label(root,text="Upper Limit    :",font=("Helvetica",'15','bold'),bg='gray81')
+lbl_txt.place(x=50,y=180)
+
+
+lbl_txt = tk.Label(root,text="Lower Limit    :",font=("Helvetica",'15','bold'),bg='gray81')
+lbl_txt.place(x=50,y=220)
+
+
+thres_up = tk.Entry(root,font=('Helvetica','15','bold'),bg='white')
+thres_up.place(x =220,y = 180,height=25,width = 200)
+
+
+thres_down = tk.Entry(root,font=('Helvetica','15','bold'),bg='white')
+thres_down.place(x =220,y = 220,height=25,width = 200)
+
+
 #Creating label Converted amount 
-lbl_txt=tk.Label(root,text="Converted Amo:",font=("Helvetica",15,'bold'),bg='Gray81')
-lbl_txt.place(x=50,y=240) 
+lbl_txt=tk.Label(root,text="Exchange Rates:",font=("Helvetica",15,'bold'),bg='Gray81')
+lbl_txt.place(x=50,y=340) 
 des_amount=Entry(root,font=('Helvetica','15','bold'),bg='white')
-des_amount.place(x=220,y=240,height=25,width=200)
+des_amount.place(x=220,y=340,height=25,width=200)
 
 
 FromCurrency_option = tk.OptionMenu(root,variable1,*list)
@@ -97,13 +159,13 @@ ToCurrency_option.place(x=270,y=140,height=25,width=150)
 
 
 #Convert button
-Btn1 = Button(root,text="Convert",font=("Helvetica",'18','bold'),bg='darkslategray3',command= currencyconversion)
-Btn1.place(x=120,y=190,height = 30,width = 120)
+Btn1 = Button(root,text="OK",font=("Helvetica",'18','bold'),bg='darkslategray3',command= combined)
+Btn1.place(x=160,y=280,height = 30,width = 120)
 
 
 #Clear all button 
 Btn2 = Button(root,text="Clear All",font=("Helvetica",'18','bold'),bg='darkslategray3',command=clear_all)
-Btn2.place(x=120,y=280,height = 30,width = 120)
+Btn2.place(x=160,y=380,height = 30,width = 120)
 
 
 root.mainloop()
