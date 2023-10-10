@@ -8,12 +8,16 @@ Monitoring exchange rates for selected currencies using custom alert agents and 
 
 
 PREREQUISITE
+
 To run the currency_exchange_monitor.py script, you need to have the following prerequisites installed:
 
 Python 3.x
 Tkinter (usually included with Python)
+
 Requests library (pip install requests)
+
 Uagents(pip install uagents)
+
 Time(pip install time)
 
 
@@ -25,7 +29,7 @@ Select the base currency and target currency from the dropdown menus.
 Enter upper and lower limits for exchange rate monitoring .
 Click the "OK" button to start monitoring exchange rates and for alert agents.
 The application will display the exchange rate and conversion result in the GUI.
-You will receive alerts if the exchange rate crosses the specified upper or lower limits, powered by custom alert agents.
+You will receive alerts messages if the exchange rate crosses the specified upper or lower limits,when you off the current tkinter window , powered by custom alert agents.
 Clear button to reset the input fields.
 
 
@@ -48,6 +52,8 @@ Custom alert agents are integrated to provide notifications when rate limits are
 
 
 API Key
+
+
 The script uses an API key to fetch exchange rate data from an external source. The API key used in this script may be subject to rate limits or restrictions. If you plan to use this script in a production environment, consider obtaining your own API key from a reliable source and replacing the placeholder API key in the headers dictionary.
 
 ALERT AGENTS
