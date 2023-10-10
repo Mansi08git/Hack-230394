@@ -1,13 +1,12 @@
-
-#import libraries 
+#import libraries
 import requests
 import time
-import uagents
-from uagents import Agent , Context
 import tkinter as tk
 from tkinter import *
-from tkinter import ttk,messagebox
+from tkinter import ttk, messagebox
 import threading
+from uagents.setup import fund_agent_if_low
+from uagents import Agent, Context, Model
 
 
 #creating GUI 
@@ -31,8 +30,9 @@ variable2.set("choose currency")
 lbl_txt = Label(root,text = 'CURRENCY CONVERTER',font=("Time New Roman",'18','bold'),bg='gray81')
 lbl_txt.place(x=110)
 
+
 #url of api key 
-url = 'https://api.apilayer.com/exchangerates_data/latest?base=INR&symbols=EUR,INR,ZAR,USD,AED,AFN,ALL,AMD,ANG,AOA,ARS,AUD,AWG,AZN,BGN,BGD,BDT,BBD,BWP,BND,BOB,BHD,BIF,BSD,BRL,BMD,BTC,BTN,BYN,BYR,BZD,CAD,CDF,CHF,CLF,CLP,CNY,COP,CRC,CUC,CUP,CVE,CZK,DJF,DKK,DOP,DZD,EGP,ERN,ETB,FJD,FKP,GBP,GEL,GGP,GHS,GIP,GMD,GNF,GTQ,GYD,HKD,HNL,HRK,HTG,HUF,IDR,ILS,IMP,IQD,IRR,ISK,JEP,JMD,JOD,JPY,KES,KGS,KHR,KMF,KPW,KRW,KWD,KYD,KZT,LAK,LBP,LKR,LRD,LSL,LTL,LVL,LYD,MAD,MDL,MGA,MKD,MMK,MNT,MOP,MRO,MUR,MVR,MWK,MXN,MYR,MZN,NAD,NGN,NIO,NOK,NPR,NZD,OMR,PAB,PEN,PGK,PHP,PKR,PLN,PYG,QAR,RON,RSD,RUB,RWF,SAR,SBD,SCR,SDG,SEK,SGD,SHP,SLE,SLL,SOS,SRD,SSP,STD,SVC,SYP,SZL,THB,TJS,TMT,TND,TOP,TRY,TTD,TWD,TZS,UAH,UGX,UYU,UZS,VEF,VES,VND,VUV,WST,XAF,XAG,XAU,XCD,XDR,XOF,XPF,YER,ZMK,ZMW,ZWL&amount=5&date=2023-10-01' 
+url = 'https://api.apilayer.com/exchangerates_data/latest?base=INR&symbols=EUR,INR,ZAR,USD,AED,AFN,ALL,AMD,ANG,AOA,ARS,AUD,AWG,AZN,BAN,BGN,BDT,BBD,BWP,BND,BOB,BHD,BIF,BSD,BRL,BMD,BTC,BTN,BYN,BYR,BZD,CAD,CDF,CHF,CLF,CLP,CNY,COP,CRC,CUC,CUP,CVE,CZK,DJF,DKK,DOP,DZD,EGP,ERN,ETB,FJD,FKP,GBP,GEL,GGP,GHS,GIP,GMD,GNF,GTQ,GYD,HKD,HNL,HRK,HTG,HUF,IDR,ILS,IMP,IQD,IRR,ISK,JEP,JMD,JOD,JPY,KES,KGS,KHR,KMF,KPW,KRW,KWD,KYD,KZT,LAK,LBP,LKR,LRD,LSL,LTL,LVL,LYD,MAD,MDL,MGA,MKD,MMK,MNT,MOP,MRO,MUR,MVR,MWK,MXN,MYR,MZN,NAD,NGN,NIO,NOK,NPR,NZD,OMR,PAB,PEN,PGK,PHP,PKR,PLN,PYG,QAR,RON,RSD,RUB,RWF,SAR,SBD,SCR,SDG,SEK,SGD,SHP,SLE,SLL,SOS,SRD,SSP,STD,SVC,SYP,SZL,THB,TJS,TMT,TND,TOP,TRY,TTD,TWD,TZS,UAH,UGX,UYU,UZS,VEF,VES,VND,VUV,WST,XAF,XAG,XAU,XCD,XDR,XOF,XPF,YER,ZMK,ZMW,ZWL&amount=5&date=2023-10-01' 
 headers = {
        "apikey":"s5eYjJ3Abu2kTs5tdEqaWAk7qWbDcM0L"
     }
@@ -46,7 +46,7 @@ def get_exchange_rates(base_currency,target_currency):
     if response.status_code==200:
         data = response.json()
         exchange_rates = data["rates"].get(target_currency)
-        return exchange_rates
+        return exchange_rates,4
     else:
         print("Failes to fetch exchange rates")
         return None
@@ -68,10 +68,16 @@ def currencyconversion():
     else:
         print("Fails to fetch exchange rates")
         return None
-    
-    
-#function for alert message
 
+class Message(Model):
+    message: str
+
+
+# Create an agent for sending alerts
+alert = Agent(name="alert", seed="alert_notifier")
+
+
+# Function to monitor exchange rates and send alerts
 def monitor_exchange_rate():
     while True:
         try:
@@ -79,32 +85,37 @@ def monitor_exchange_rate():
             target_currency = variable2.get()
             threshold_up = float(thres_up.get())
             threshold_down = float(thres_down.get())
-           
             convert_data = response.json()
             current_rate=(convert_data['rates'][target_currency]*1)/convert_data['rates'][base_currency]
  
             
+            
             if current_rate is not None:
-                
                 if current_rate > threshold_up:
-                    alert_message = f"Alert: Exchange rate is more than upper limit"
-                    messagebox.showinfo("Exchange Rate Alert", alert_message)
+                   
+                    @alert.on_interval(period=30)
+                    async def warn(ctx: Context):
+                        warnings = ctx.send(destination="destination_here", message=Message(message="Threshold limit exceeded"))
+                        messagebox.showinfo("Exchange Rate Alert","More than upper limit")
+   
+                       
                 elif current_rate < threshold_down:
-                    alert_message1 = f"Alert: Exchange rate is less than lower limit"
-                    messagebox.showinfo("Exchange Rate Alert", alert_message1)
+                    @alert.on_interval(period=30)
+                    async def warn(ctx: Context):
+                        warnings = ctx.send(destination="destination_here", message=Message(message="Threshold limit exceeded"))
+                        messagebox.showinfo("Exchange Rate Alert","Less than lower limit")
+   
+
         except ValueError:
             pass  # Handle invalid threshold values gracefully
         time.sleep(300)
-
-
-#combined function for monitor_exchange_rate and currencyconversion
-
 def combined():
     currency_conversion_thread = threading.Thread(target=currencyconversion)
     exchange_rate_thread = threading.Thread(target=monitor_exchange_rate)
     
     currency_conversion_thread.start()
     exchange_rate_thread.start()
+
 
 #Function for clearing all values
 def clear_all():
@@ -167,5 +178,10 @@ Btn1.place(x=160,y=280,height = 30,width = 120)
 Btn2 = Button(root,text="Clear All",font=("Helvetica",'18','bold'),bg='darkslategray3',command=clear_all)
 Btn2.place(x=160,y=380,height = 30,width = 120)
 
-
 root.mainloop()
+
+if __name__ == "__main__":
+    # Start the uagents agent in a separate thread
+    alert_thread = threading.Thread(target=alert.run)
+    #alert_thread.daemon = True  # Set as a daemon thread so it exits when the main program exits
+    alert_thread.start()
