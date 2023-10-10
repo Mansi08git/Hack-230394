@@ -1,5 +1,6 @@
 # Hack
 OVERVIEW
+
 The currency_exchange_monitor.py script provides a user-friendly interface for the following functions:
 
 Currency_exchange_monitor between two base currency and foreign currency.
@@ -35,6 +36,7 @@ Real-time exchange rate monitoring with user-defined upper and lower limits.
 Alert messages for rate limit breaches, using custom alert agents.
 Clear button to reset the input fields.
 
+
 CODE STRUCTURE
 
 
@@ -48,6 +50,6 @@ Custom alert agents are integrated to provide notifications when rate limits are
 API Key
 The script uses an API key to fetch exchange rate data from an external source. The API key used in this script may be subject to rate limits or restrictions. If you plan to use this script in a production environment, consider obtaining your own API key from a reliable source and replacing the placeholder API key in the headers dictionary.
 
-Alert Agents
+ALERT AGENTS
 
 Custom alert agents have been added to the script to provide rate monitoring and notifications. These agents continuously check the exchange rate between the selected currencies and trigger alerts when the rate crosses user-defined upper or lower limits. The alerts are displayed as pop-up messages in the GUI.
