@@ -1,21 +1,13 @@
 """Wrapper functions for Tcl/Tk.
 
-Tkinter provides classes which allow the display, positioning and
-control of widgets. Toplevel widgets are Tk and Toplevel. Other
-widgets are Frame, Label, Entry, Text, Canvas, Button, Radiobutton,
-Checkbutton, Scale, Listbox, Scrollbar, OptionMenu, Spinbox
-LabelFrame and PanedWindow.
+Tkinter provides classes which allow the display, positioning and control of widgets. Toplevel widgets are Tk and Toplevel. Other widgets are Frame, Label, Entry, Text, Canvas, Button, Radiobutton, Checkbutton, Scale, Listbox, Scrollbar, OptionMenu, Spinbox LabelFrame and PanedWindow.
 
 Properties of the widgets are specified with keyword arguments.
-Keyword arguments have the same name as the corresponding resource
-under Tk.
+Keyword arguments have the same name as the corresponding resource under Tk.
 
-Widgets are positioned with one of the geometry managers Place, Pack
-or Grid. These managers can be called with methods place, pack, grid
-available in every Widget.
+Widgets are positioned with one of the geometry managers Place, Pack or Grid. These managers can be called with methods place, pack, grid available in every Widget.
 
-Actions are bound to events by resources (e.g. keyword argument
-command) or with the method bind.
+Actions are bound to events by resources (e.g. keyword argument command) or with the method bind.
 
 Example (Hello, World):
 import tkinter
@@ -221,13 +213,9 @@ class Event:
     Colormap, Gravity, Reparent, Property, Destroy, Activate,
     Deactivate - for window events.
 
-    If a callback function for one of these events is registered
-    using bind, bind_all, bind_class, or tag_bind, the callback is
-    called with an Event as first argument. It will have the
-    following attributes (in braces are the event types for which
-    the attribute is valid):
+    If a callback function for one of these events is registered using bind, bind_all, bind_class, or tag_bind, the callback is called with an Event as first argument. It will have the following attributes (in braces are the event types for which the attribute is valid):
 
-        serial - serial number of event
+    serial - serial number of event
     num - mouse button pressed (ButtonPress, ButtonRelease)
     focus - whether the window has the focus (Enter, Leave)
     height - height of the exposed window (Configure, Expose)
@@ -449,10 +437,8 @@ class Variable:
     def trace_add(self, mode, callback):
         """Define a trace callback for the variable.
 
-        Mode is one of "read", "write", "unset", or a list or tuple of
-        such strings.
-        Callback must be a function which is called when the variable is
-        read, written or unset.
+        Mode is one of "read", "write", "unset", or a list or tuple of such strings.
+        Callback must be a function which is called when the variable is read, written or unset.
 
         Return the name of the callback.
         """
@@ -464,8 +450,7 @@ class Variable:
     def trace_remove(self, mode, cbname):
         """Delete the trace callback for a variable.
 
-        Mode is one of "read", "write", "unset" or a list or tuple of
-        such strings.  Must be same as were specified in trace_add().
+        Mode is one of "read", "write", "unset" or a list or tuple of such strings.  Must be same as were specified in trace_add().
         cbname is the name of the callback returned from trace_add().
         """
         self._tk.call('trace', 'remove', 'variable',
@@ -495,8 +480,7 @@ class Variable:
 
         Return the name of the callback.
 
-        This deprecated method wraps a deprecated Tcl method that will
-        likely be removed in the future.  Use trace_add() instead.
+        This deprecated method wraps a deprecated Tcl method that will likely be removed in the future.  Use trace_add() instead.
         """
         # TODO: Add deprecation warning
         cbname = self._register(callback)
@@ -511,8 +495,7 @@ class Variable:
         MODE is one of "r", "w", "u" for read, write, undefine.
         CBNAME is the name of the callback returned from trace_variable or trace.
 
-        This deprecated method wraps a deprecated Tcl method that will
-        likely be removed in the future.  Use trace_remove() instead.
+        This deprecated method wraps a deprecated Tcl method that will likely be removed in the future.  Use trace_remove() instead.
         """
         # TODO: Add deprecation warning
         self._tk.call("trace", "vdelete", self._name, mode, cbname)
@@ -530,8 +513,7 @@ class Variable:
     def trace_vinfo(self):
         """Return all trace callback information.
 
-        This deprecated method wraps a deprecated Tcl method that will
-        likely be removed in the future.  Use trace_info() instead.
+        This deprecated method wraps a deprecated Tcl method that will likely be removed in the future.  Use trace_info() instead.
         """
         # TODO: Add deprecation warning
         return [self._tk.splitlist(x) for x in self._tk.splitlist(
@@ -556,8 +538,7 @@ class StringVar(Variable):
         VALUE is an optional value (defaults to "")
         NAME is an optional Tcl name (defaults to PY_VARnum).
 
-        If NAME matches an existing variable and VALUE is omitted
-        then the existing value is retained.
+        If NAME matches an existing variable and VALUE is omitted then the existing value is retained.
         """
         Variable.__init__(self, master, value, name)
 
@@ -580,8 +561,7 @@ class IntVar(Variable):
         VALUE is an optional value (defaults to 0)
         NAME is an optional Tcl name (defaults to PY_VARnum).
 
-        If NAME matches an existing variable and VALUE is omitted
-        then the existing value is retained.
+        If NAME matches an existing variable and VALUE is omitted then the existing value is retained.
         """
         Variable.__init__(self, master, value, name)
 
@@ -605,8 +585,7 @@ class DoubleVar(Variable):
         VALUE is an optional value (defaults to 0.0)
         NAME is an optional Tcl name (defaults to PY_VARnum).
 
-        If NAME matches an existing variable and VALUE is omitted
-        then the existing value is retained.
+        If NAME matches an existing variable and VALUE is omitted then the existing value is retained.
         """
         Variable.__init__(self, master, value, name)
 
@@ -626,8 +605,7 @@ class BooleanVar(Variable):
         VALUE is an optional value (defaults to False)
         NAME is an optional Tcl name (defaults to PY_VARnum).
 
-        If NAME matches an existing variable and VALUE is omitted
-        then the existing value is retained.
+        If NAME matches an existing variable and VALUE is omitted then the existing value is retained.
         """
         Variable.__init__(self, master, value, name)
 
@@ -702,8 +680,7 @@ class Misc:
         """Set Tcl internal variable, whether the look and feel
         should adhere to Motif.
 
-        A parameter of 1 means adhere to Motif (e.g. no color
-        change if mouse passes over slider).
+        A parameter of 1 means adhere to Motif (e.g. no color change if mouse passes over slider).
         Returns the set value."""
         return self.tk.getboolean(self.tk.call(
             'set', 'tk_strictMotif', boolean))
@@ -715,14 +692,8 @@ class Misc:
     def tk_setPalette(self, *args, **kw):
         """Set a new color scheme for all widget elements.
 
-        A single color as argument will cause that all colors of Tk
-        widget elements are derived from this.
-        Alternatively several keyword parameters and its associated
-        colors can be given. The following keywords are valid:
-        activeBackground, foreground, selectColor,
-        activeForeground, highlightBackground, selectBackground,
-        background, highlightColor, selectForeground,
-        disabledForeground, insertBackground, troughColor."""
+        A single color as argument will cause that all colors of Tk widget elements are derived from this.
+        Alternatively several keyword parameters and its associated colors can be given. The following keywords are valid: activeBackground, foreground, selectColor, activeForeground, highlightBackground, selectBackground, background, highlightColor, selectForeground, disabledForeground, insertBackground, troughColor."""
         self.tk.call(('tk_setPalette',)
               + _flatten(args) + _flatten(list(kw.items())))
 
@@ -781,32 +752,25 @@ class Misc:
     def focus_set(self):
         """Direct input focus to this widget.
 
-        If the application currently does not have the focus
-        this widget will get the focus if the application gets
-        the focus through the window manager."""
+        If the application currently does not have the focus this widget will get the focus if the application gets the focus through the window manager."""
         self.tk.call('focus', self._w)
     focus = focus_set # XXX b/w compat?
 
     def focus_force(self):
-        """Direct input focus to this widget even if the
-        application does not have the focus. Use with
-        caution!"""
+        """Direct input focus to this widget even if the application does not have the focus. Use with caution!"""
         self.tk.call('focus', '-force', self._w)
 
     def focus_get(self):
         """Return the widget which has currently the focus in the
         application.
 
-        Use focus_displayof to allow working with several
-        displays. Return None if application does not have
-        the focus."""
+        Use focus_displayof to allow working with several displays. Return None if application does not have the focus."""
         name = self.tk.call('focus')
         if name == 'none' or not name: return None
         return self._nametowidget(name)
 
     def focus_displayof(self):
-        """Return the widget which has currently the focus on the
-        display where this widget is located.
+        """Return the widget which has currently the focus on the display where this widget is located.
 
         Return None if the application does not have the focus."""
         name = self.tk.call('focus', '-displayof', self._w)
@@ -814,26 +778,19 @@ class Misc:
         return self._nametowidget(name)
 
     def focus_lastfor(self):
-        """Return the widget which would have the focus if top level
-        for this widget gets the focus from the window manager."""
+        """Return the widget which would have the focus if top level for this widget gets the focus from the window manager."""
         name = self.tk.call('focus', '-lastfor', self._w)
         if name == 'none' or not name: return None
         return self._nametowidget(name)
 
     def tk_focusFollowsMouse(self):
-        """The widget under mouse will get automatically focus. Can not
-        be disabled easily."""
+        """The widget under mouse will get automatically focus. Can not be disabled easily."""
         self.tk.call('tk_focusFollowsMouse')
 
     def tk_focusNext(self):
-        """Return the next widget in the focus order which follows
-        widget which has currently the focus.
+        """Return the next widget in the focus order which follows widget which has currently the focus.
 
-        The focus order first goes to the next child, then to
-        the children of the child recursively and then to the
-        next sibling which is higher in the stacking order.  A
-        widget is omitted if it has the takefocus resource set
-        to 0."""
+        The focus order first goes to the next child, then to the children of the child recursively and then to the next sibling which is higher in the stacking order.  A widget is omitted if it has the takefocus resource set to 0."""
         name = self.tk.call('tk_focusNext', self._w)
         if not name: return None
         return self._nametowidget(name)
@@ -847,10 +804,7 @@ class Misc:
     def after(self, ms, func=None, *args):
         """Call function once after given time.
 
-        MS specifies the time in milliseconds. FUNC gives the
-        function which shall be called. Additional parameters
-        are given as parameters to the function call.  Return
-        identifier to cancel scheduling with after_cancel."""
+        MS specifies the time in milliseconds. FUNC gives the function which shall be called. Additional parameters are given as parameters to the function call.  Return identifier to cancel scheduling with after_cancel."""
         if func is None:
             # I'd rather use time.sleep(ms*0.001)
             self.tk.call('after', ms)
@@ -873,18 +827,15 @@ class Misc:
             return self.tk.call('after', ms, name)
 
     def after_idle(self, func, *args):
-        """Call FUNC once if the Tcl main loop has no event to
-        process.
+        """Call FUNC once if the Tcl main loop has no event to process.
 
-        Return an identifier to cancel the scheduling with
-        after_cancel."""
+        Return an identifier to cancel the scheduling with after_cancel."""
         return self.after('idle', func, *args)
 
     def after_cancel(self, id):
         """Cancel scheduling of function identified with ID.
 
-        Identifier returned by after or after_idle must be
-        given as first parameter.
+        Identifier returned by after or after_idle must be given as first parameter.
         """
         if not id:
             raise ValueError('id must be a valid identifier returned from '
@@ -905,17 +856,11 @@ class Misc:
     def clipboard_get(self, **kw):
         """Retrieve data from the clipboard on window's display.
 
-        The window keyword defaults to the root window of the Tkinter
-        application.
+        The window keyword defaults to the root window of the Tkinter application.
 
-        The type keyword specifies the form in which the data is
-        to be returned and should be an atom name such as STRING
-        or FILE_NAME.  Type defaults to STRING, except on X11, where the default
-        is to try UTF8_STRING and fall back to STRING.
+        The type keyword specifies the form in which the data is to be returned and should be an atom name such as STRING or FILE_NAME.  Type defaults to STRING, except on X11, where the default is to try UTF8_STRING and fall back to STRING.
 
-        This command is equivalent to:
-
-        selection_get(CLIPBOARD)
+        This command is equivalent to: selection_get(CLIPBOARD)
         """
         if 'type' not in kw and self._windowingsystem == 'x11':
             try:
@@ -928,25 +873,21 @@ class Misc:
     def clipboard_clear(self, **kw):
         """Clear the data in the Tk clipboard.
 
-        A widget specified for the optional displayof keyword
-        argument specifies the target display."""
+        A widget specified for the optional displayof keyword argument specifies the target display."""
         if 'displayof' not in kw: kw['displayof'] = self._w
         self.tk.call(('clipboard', 'clear') + self._options(kw))
 
     def clipboard_append(self, string, **kw):
         """Append STRING to the Tk clipboard.
 
-        A widget specified at the optional displayof keyword
-        argument specifies the target display. The clipboard
-        can be retrieved with selection_get."""
+        A widget specified at the optional displayof keyword argument specifies the target display. The clipboard can be retrieved with selection_get."""
         if 'displayof' not in kw: kw['displayof'] = self._w
         self.tk.call(('clipboard', 'append') + self._options(kw)
               + ('--', string))
     # XXX grab current w/o window argument
 
     def grab_current(self):
-        """Return widget which has currently the grab in this application
-        or None."""
+        """Return widget which has currently the grab in this application or None."""
         name = self.tk.call('grab', 'current', self._w)
         if not name: return None
         return self._nametowidget(name)
@@ -958,28 +899,23 @@ class Misc:
     def grab_set(self):
         """Set grab for this widget.
 
-        A grab directs all events to this and descendant
-        widgets in the application."""
+        A grab directs all events to this and descendant widgets in the application."""
         self.tk.call('grab', 'set', self._w)
 
     def grab_set_global(self):
         """Set global grab for this widget.
 
-        A global grab directs all events to this and
-        descendant widgets on the display. Use with caution -
-        other applications do not get events anymore."""
+        A global grab directs all events to this and descendant widgets on the display. Use with caution - other applications do not get events anymore."""
         self.tk.call('grab', 'set', '-global', self._w)
 
     def grab_status(self):
-        """Return None, "local" or "global" if this widget has
-        no, a local or a global grab."""
+        """Return None, "local" or "global" if this widget has no, a local or a global grab."""
         status = self.tk.call('grab', 'status', self._w)
         if status == 'none': status = None
         return status
 
     def option_add(self, pattern, value, priority = None):
-        """Set a VALUE (second parameter) for an option
-        PATTERN (first parameter).
+        """Set a VALUE (second parameter) for an option PATTERN (first parameter).
 
         An optional third parameter gives the numeric priority
         (defaults to 80)."""
@@ -4149,9 +4085,7 @@ class PhotoImage(Image):
         return destImage
 
     def zoom(self, x, y=''):
-        """Return a new PhotoImage with the same image as this widget
-        but zoom it with a factor of x in the X direction and y in the Y
-        direction.  If y is not given, the default value is the same as x.
+        """Return a new PhotoImage with the same image as this widget but zoom it with a factor of x in the X direction and y in the Y direction.  If y is not given, the default value is the same as x.
         """
         destImage = PhotoImage(master=self.tk)
         if y=='': y=x
@@ -4159,9 +4093,7 @@ class PhotoImage(Image):
         return destImage
 
     def subsample(self, x, y=''):
-        """Return a new PhotoImage based on the same image as this widget
-        but use only every Xth or Yth pixel.  If y is not given, the
-        default value is the same as x.
+        """Return a new PhotoImage based on the same image as this widget but use only every Xth or Yth pixel.  If y is not given, the default value is the same as x.
         """
         destImage = PhotoImage(master=self.tk)
         if y=='': y=x
@@ -4173,8 +4105,7 @@ class PhotoImage(Image):
         return self.tk.call(self.name, 'get', x, y)
 
     def put(self, data, to=None):
-        """Put row formatted colors to image starting from
-        position TO, e.g. image.put("{red green} {blue yellow}", to=(4,6))"""
+        """Put row formatted colors to image starting from position TO, e.g. image.put("{red green} {blue yellow}", to=(4,6))"""
         args = (self.name, 'put', data)
         if to:
             if to[0] == '-to':
@@ -4184,8 +4115,7 @@ class PhotoImage(Image):
     # XXX read
 
     def write(self, filename, format=None, from_coords=None):
-        """Write image to file FILENAME in FORMAT starting from
-        position FROM_COORDS."""
+        """Write image to file FILENAME in FORMAT starting from position FROM_COORDS."""
         args = (self.name, 'write', filename)
         if format:
             args = args + ('-format', format)
@@ -4231,52 +4161,25 @@ class Spinbox(Widget, XView):
 
         STANDARD OPTIONS
 
-            activebackground, background, borderwidth,
-            cursor, exportselection, font, foreground,
-            highlightbackground, highlightcolor,
-            highlightthickness, insertbackground,
-            insertborderwidth, insertofftime,
-            insertontime, insertwidth, justify, relief,
-            repeatdelay, repeatinterval,
-            selectbackground, selectborderwidth
-            selectforeground, takefocus, textvariable
-            xscrollcommand.
+            activebackground, background, borderwidth, cursor, exportselection, font, foreground, highlightbackground, highlightcolor, highlightthickness, insertbackground, insertborderwidth, insertofftime, insertontime, insertwidth, justify, relief, repeatdelay, repeatinterval, selectbackground, selectborderwidth selectforeground, takefocus, textvariable xscrollcommand.
 
         WIDGET-SPECIFIC OPTIONS
 
-            buttonbackground, buttoncursor,
-            buttondownrelief, buttonuprelief,
-            command, disabledbackground,
-            disabledforeground, format, from,
-            invalidcommand, increment,
-            readonlybackground, state, to,
-            validate, validatecommand values,
-            width, wrap,
+            buttonbackground, buttoncursor, buttondownrelief, buttonuprelief, command, disabledbackground, disabledforeground, format, from, invalidcommand, increment, readonlybackground, state, to, validate, validatecommand values, width, wrap,
         """
         Widget.__init__(self, master, 'spinbox', cnf, kw)
 
     def bbox(self, index):
-        """Return a tuple of X1,Y1,X2,Y2 coordinates for a
-        rectangle which encloses the character given by index.
+        """Return a tuple of X1,Y1,X2,Y2 coordinates for a rectangle which encloses the character given by index.
 
-        The first two elements of the list give the x and y
-        coordinates of the upper-left corner of the screen
-        area covered by the character (in pixels relative
-        to the widget) and the last two elements give the
-        width and height of the character, in pixels. The
-        bounding box may refer to a region outside the
-        visible area of the window.
+        The first two elements of the list give the x and y coordinates of the upper-left corner of the screen area covered by the character (in pixels relative to the widget) and the last two elements give the width and height of the character, in pixels. The bounding box may refer to a region outside the visible area of the window.
         """
         return self._getints(self.tk.call(self._w, 'bbox', index)) or None
 
     def delete(self, first, last=None):
         """Delete one or more elements of the spinbox.
 
-        First is the index of the first character to delete,
-        and last is the index of the character just after
-        the last one to delete. If last isn't specified it
-        defaults to first+1, i.e. a single character is
-        deleted.  This command returns an empty string.
+        First is the index of the first character to delete, and last is the index of the character just after the last one to delete. If last isn't specified it defaults to first+1, i.e. a single character is deleted.  This command returns an empty string.
         """
         return self.tk.call(self._w, 'delete', first, last)
 
@@ -4287,8 +4190,7 @@ class Spinbox(Widget, XView):
     def icursor(self, index):
         """Alter the position of the insertion cursor.
 
-        The insertion cursor will be displayed just before
-        the character given by index. Returns an empty string
+        The insertion cursor will be displayed just before the character given by index. Returns an empty string
         """
         return self.tk.call(self._w, 'icursor', index)
 
@@ -4314,8 +4216,7 @@ class Spinbox(Widget, XView):
     def invoke(self, element):
         """Causes the specified element to be invoked
 
-        The element could be buttondown or buttonup
-        triggering the action associated with it.
+        The element could be buttondown or buttonup triggering the action associated with it.
         """
         return self.tk.call(self._w, 'invoke', element)
 
