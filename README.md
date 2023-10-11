@@ -1,4 +1,4 @@
-# Hack
+# Currency Exchange Monitor
 OVERVIEW
 
 The currency_exchange_monitor.py script provides a user-friendly interface for the following functions:
