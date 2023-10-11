@@ -27,7 +27,7 @@ variable2.set("choose currency")
 
 
 #Creating Header 
-lbl_txt = Label(root,text = 'CURRENCY CONVERTER',font=("Time New Roman",'18','bold'),bg='gray81')
+lbl_txt = Label(root,text = 'CURRENCY CONVERTER',font=("Time New Roman",'18','bold'),bg='azure2')
 lbl_txt.place(x=110)
 
 
@@ -96,14 +96,14 @@ def monitor_exchange_rate():
                     @alert.on_interval(period=30)
                     async def warn(ctx: Context):
                         warnings = ctx.send(destination="destination_here", message=Message(message="Threshold limit exceeded"))
-                        messagebox.showinfo("Exchange Rate Alert","More than upper limit")
+                        messagebox.showinfo("Exchange Rate Alert","Exchange rate more than upper limit")
    
                        
                 elif current_rate < threshold_down:
                     @alert.on_interval(period=30)
                     async def warn(ctx: Context):
                         warnings = ctx.send(destination="destination_here", message=Message(message="Threshold limit exceeded"))
-                        messagebox.showinfo("Exchange Rate Alert","Less than lower limit")
+                        messagebox.showinfo("Exchange Rate Alert","Exchange rate less than lower limit")
    
 
         except ValueError:
@@ -129,20 +129,20 @@ list= ['EUR','INR','ZAR','USD','AED','AFN','ALL','AMD','ANG','AOA','ARS','AUD','
 
 
 #Creating label from currency 
-lbl_txt = tk.Label(root,text="Base Currency :",font=("Helvetica",'15','bold'),bg='gray81')
+lbl_txt = tk.Label(root,text="Base Currency :",font=("Helvetica",'15','bold'),bg='azure2')
 lbl_txt.place(x=50,y=100)
 
 
 #Creating label to currency 
-lbl_txt = tk.Label(root,text="Target Currency     :",font=("Helvetica",'15','bold'),bg='gray81')
+lbl_txt = tk.Label(root,text="Target Currency     :",font=("Helvetica",'15','bold'),bg='azure2')
 lbl_txt.place(x=50,y=140)
 
 
-lbl_txt = tk.Label(root,text="Upper Limit    :",font=("Helvetica",'15','bold'),bg='gray81')
+lbl_txt = tk.Label(root,text="Upper Limit    :",font=("Helvetica",'15','bold'),bg='azure2')
 lbl_txt.place(x=50,y=180)
 
 
-lbl_txt = tk.Label(root,text="Lower Limit    :",font=("Helvetica",'15','bold'),bg='gray81')
+lbl_txt = tk.Label(root,text="Lower Limit    :",font=("Helvetica",'15','bold'),bg='azure2')
 lbl_txt.place(x=50,y=220)
 
 
@@ -155,7 +155,7 @@ thres_down.place(x =220,y = 220,height=25,width = 200)
 
 
 #Creating label Converted amount 
-lbl_txt=tk.Label(root,text="Exchange Rates:",font=("Helvetica",15,'bold'),bg='Gray81')
+lbl_txt=tk.Label(root,text="Exchange Rates:",font=("Helvetica",15,'bold'),bg='azure2')
 lbl_txt.place(x=50,y=340) 
 des_amount=Entry(root,font=('Helvetica','15','bold'),bg='white')
 des_amount.place(x=220,y=340,height=25,width=200)
