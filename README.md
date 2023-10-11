@@ -47,7 +47,7 @@ Exchange rate data is fetched from an external API using the Requests library.
 Custom alert agents are integrated to provide notifications when rate limits are breached.
 
 
-API Key:
+API KEY:
 
 The script uses an API key to fetch exchange rate data from an external source. The API key used in this script may be subject to rate limits or restrictions. If you plan to use this script in a production environment, consider obtaining your own API key from a reliable source and replacing the placeholder API key in the headers dictionary.
 
